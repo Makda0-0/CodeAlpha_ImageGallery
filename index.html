@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Gallery</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Lightbox Overlay -->
+    <div class="full-img" id="fullImgBox">
+        <span class="nav-btn prev-btn" onclick="changeImg(-1)">◀</span>
+        <img src="images/im1.jpg" id="fullImg" alt="Full Image">
+        <span class="nav-btn next-btn" onclick="changeImg(1)">▶</span>
+        <span class="close-btn" onclick="closefullImg()">×</span>
+    </div>
+
+    <!-- Filter Buttons -->
+    <div class="filter-container">
+        <button class="filter-btn active" onclick="filterImages('all')">All</button>
+        <button class="filter-btn" onclick="filterImages('nature')">Nature</button>
+        <button class="filter-btn" onclick="filterImages('city')">City</button>
+        <button class="filter-btn" onclick="filterImages('abstract')">Abstract</button>
+    </div>
+
+    <!-- Gallery Thumbnails -->
+    <div class="img-gallery" id="imgGallery">
+        <img src="images/im1.jpg" data-category="nature" onclick="openfullImg(this.src, this.dataset.index)" alt="Nature 1">
+        <img src="images/im19.jpg" data-category="abstract" onclick="openfullImg(this.src, this.dataset.index)" alt="Abstract 6">
+        <img src="images/im20.jpg" data-category="abstract" onclick="openfullImg(this.src, this.dataset.index)" alt="Abstract 7">
+        <img src="images/images4.jpg" data-category="nature" onclick="openfullImg(this.src, this.dataset.index)" alt="Nature 4">
+        <img src="images/images5.jpg" data-category="nature" onclick="openfullImg(this.src, this.dataset.index)" alt="Nature 5">
+        <img src="images/im21.jpg" data-category="city" onclick="openfullImg(this.src, this.dataset.index)" alt="City 1">
+        <img src="images/images7.jpg" data-category="abstract" onclick="openfullImg(this.src, this.dataset.index)" alt="Abstract 8">
+        <img src="images/images8.jpg" data-category="nature" onclick="openfullImg(this.src, this.dataset.index)" alt="Nature 1">
+        <img src="images/im9.jpg" data-category="nature" onclick="openfullImg(this.src, this.dataset.index)" alt="Nature 2">
+        <img src="images/im10.jpg" data-category="nature" onclick="openfullImg(this.src, this.dataset.index)" alt="Nature 3">
+        <img src="images/im11.jpg" data-category="city" onclick="openfullImg(this.src, this.dataset.index)" alt="city 2">
+        <img src="images/im12.jpg" data-category="abstract" onclick="openfullImg(this.src, this.dataset.index)" alt="Abstract 2">
+        <img src="images/im13.jpg" data-category="city" onclick="openfullImg(this.src, this.dataset.index)" alt="City 2">
+        <img src="images/im14.jpg" data-category="abstract" onclick="openfullImg(this.src, this.dataset.index)" alt="Abstract 4">
+        <img src="images/im15.jpg" data-category="nature" onclick="openfullImg(this.src, this.dataset.index)" alt="Nature 6">
+        <img src="images/im16.jpg" data-category="city" onclick="openfullImg(this.src, this.dataset.index)" alt="City 3">
+        <img src="images/im17.jpg" data-category="city" onclick="openfullImg(this.src, this.dataset.index)" alt="City 4">
+        <img src="images/im18.jpg" data-category="city" onclick="openfullImg(this.src, this.dataset.index)" alt="City 5">
+    </div>
+
+    <script>
+        // array for navigation
+        const galleryImages = Array.from(document.querySelectorAll('.img-gallery img')).map(img => img.src);
+        let currentImgIndex = 0;
+
+       
+        var fullImgBox = document.getElementById("fullImgBox");
+        var fullImg = document.getElementById("fullImg");
+
+        
+        function openfullImg(pic, index) {
+            currentImgIndex = parseInt(index) || 0; // Fallback to 0 if no index
+            fullImg.src = pic;
+            fullImgBox.style.display = "flex";
+            fullImgBox.style.opacity = "1";
+            fullImgBox.style.transform = "scale(1)";
+            document.body.style.overflow = "hidden"; // Prevent scrolling
+        }
+
+        
+        function closefullImg() {
+            fullImgBox.style.opacity = "0";
+            fullImgBox.style.transform = "scale(0.9)";
+            setTimeout(() => {
+                fullImgBox.style.display = "none";
+                fullImgBox.style.opacity = "1";
+                fullImgBox.style.transform = "scale(1)";
+                document.body.style.overflow = "auto";
+            }, 300);
+        }
+
+        // Change image (next/prev)
+        function changeImg(direction) {
+            currentImgIndex = (currentImgIndex + direction + galleryImages.length) % galleryImages.length;
+            fullImg.src = galleryImages[currentImgIndex];
+        }
+
+        // Filter images by category
+        function filterImages(category) {
+            const images = document.querySelectorAll('.img-gallery img');
+            const buttons = document.querySelectorAll('.filter-btn');
+
+            // Update active button
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            images.forEach((img, index) => {
+                img.dataset.index = index; // Set index for navigation
+                if (category === 'all' || img.dataset.category === category) {
+                    img.style.display = 'block';
+                } else {
+                    img.style.display = 'none';
+                }
+            });
+
+            // Update galleryImages array to only visible images for navigation
+            const visibleImages = Array.from(images).filter(img => img.style.display !== 'none').map(img => img.src);
+            if (visibleImages.length > 0) {
+                galleryImages.splice(0, galleryImages.length, ...visibleImages); // Replace with visible
+                currentImgIndex = 0; // Reset index on filter
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (fullImgBox.style.display === 'flex') {
+                if (e.key === 'ArrowLeft') changeImg(-1);
+                if (e.key === 'ArrowRight') changeImg(1);
+                if (e.key === 'Escape') closefullImg();
+            }
+        });
+
+        // Initial setup: Set indices
+        document.addEventListener('DOMContentLoaded', () => {
+            const images = document.querySelectorAll('.img-gallery img');
+            images.forEach((img, index) => {
+                img.dataset.index = index;
+                img.onerror = () => console.error(`Failed to load: ${img.src}`); // Error handling
+            });
+        });
+    </script>
+</body>
+</html>
+</html>
