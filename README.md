@@ -17,14 +17,13 @@ A modern, responsive image gallery with filtering capabilities and smooth lightb
 - **⌨️ Keyboard Navigation** - Use arrow keys and Escape for navigation
 - **📐 CSS Grid Layout** - Modern, flexible gallery arrangement
 - **🎭 Smooth Transitions** - CSS animations for all interactions
-- **📲 Mobile Optimized** - Touch-friendly interface for mobile devices
+
 
 ## 🛠 Technologies Used
 
 - **HTML5** - Semantic markup structure
 - **CSS3** - Grid, Flexbox, transitions, and animations
 - **JavaScript** - DOM manipulation and event handling
-- **Responsive Design** - Mobile-first approach
 
 
 ## 🎮 How to Use
