@@ -45,6 +45,6 @@ A modern, responsive image gallery with filtering capabilities and smooth lightb
 
 ### Adding New Images
 1. Add images to the `images/` folder
-2. Update HTML with new image elements:
-```html
-<img src="images/your-image.jpg" data-category="category" onclick="openfullImg(this.src, this.dataset.index)" alt="Description">
+2. Update HTML with new image elements
+
+
